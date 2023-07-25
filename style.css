@@ -1,0 +1,18 @@
+.gridContainer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: stretch;
+    width: 400px;
+    height: 400px;
+}
+.grid.colored {
+    background-color: black
+}
+.grid {
+    border: 1px solid black;
+    margin-left: -1px;
+    margin-top: -1px;
+    aspect-ratio: 1;
+    width: 99px;
+}
