@@ -63,7 +63,6 @@ function colorSquares() {
         gridSquares[i].addEventListener('mouseover', function(e) {
             if ((e.buttons == 1 || e.buttons == 3) && (colorMode == true && ghostMode == false)) {
                 gridSquares[i].setAttribute('style', `opacity: 1; background-color: ${color};`);
-                console.log('colorMode')
             } else if ((e.buttons == 1 || e.buttons == 3) && (rainbowMode == true)) {
                 randomColor();
                 gridSquares[i].setAttribute('style', `opacity: 1; background-color: ${currentRandomColor};`);
