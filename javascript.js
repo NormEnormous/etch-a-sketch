@@ -6,10 +6,6 @@ let rainbowMode = false;
 let colorMode = true;
 var r = document.querySelector(':root');
 
-function randomColor() {
-    currentRandomColor ='#'+ Math.floor(Math.random()*16777215).toString(16);
-}
-
 const grid = document.querySelector('.gridContainer');
 const currentGrids = document.getElementsByClassName('grid');
 const gridButton = document.querySelector('#gridButton');
@@ -17,14 +13,16 @@ const colorPicker = document.querySelector('#colorPicker');
 const colorButton = document.querySelector('#colorButton');
 const ghostButton = document.querySelector('#ghostButton');
 const rainbowButton = document.querySelector('#rainbowButton');
+const clearButton = document.querySelector('#clearButton');
 
-gridButton.addEventListener('click', () => changeGridSize());
 colorPicker.addEventListener("input", watchColorPicker, false);
 colorPicker.addEventListener("change", watchColorPicker, false);
 colorButton.addEventListener('click', () => setModeColor());
 rainbowButton.addEventListener('click', () => setRainbowMode());
-
-
+ghostButton.addEventListener('click', () => setGhostMode());
+clearButton.addEventListener('click', () => clearWorkspace());
+gridButton.addEventListener('click', () => changeGridSize());
+// Grid Functions
 function removeGrids() {
     for (let i = currentGrids.length; i > 0; i--) {
         const div = document.querySelector(".grid")
@@ -36,6 +34,7 @@ function addGrids() {
     for (let i = 0; i < gridSize; i++) {
         const div = document.createElement('div');
         div.classList.add('grid');
+        div.setAttribute('style', `opacity: 1;`);
         r.style.setProperty('--basis', `${basis}%`);
         grid.appendChild(div);
     }
@@ -44,47 +43,6 @@ function changeGrids() {
     removeGrids();
     addGrids();
     colorSquares();
-}
-// Click and hover events. performance issues.
-// function colorSquares() {
-//     const gridSquares = document.querySelectorAll('.grid');
-//     for(let i = 0; i < gridSquares.length; i++) {
-//         gridSquares[i].addEventListener('mouseover', function(e) {
-//             if (e.buttons == 1 || e.buttons == 3) {
-//                 gridSquares[i].setAttribute('style', `background-color: ${color};`);
-//             }
-//         })
-//     }
-//     for(let i = 0; i < gridSquares.length; i++) {
-//         gridSquares[i].addEventListener('mousedown', function(e) {
-//             gridSquares[i].setAttribute('style', `background-color: ${color};`);
-//         })
-//     }
-// }
-function colorSquares() {
-    const gridSquares = document.querySelectorAll('.grid');
-    for(let i = 0; i < gridSquares.length; i++) {
-        gridSquares[i].addEventListener('mouseover', function(e) {
-            if ((e.buttons == 1 || e.buttons == 3) && (colorMode == true)) {
-                gridSquares[i].setAttribute('style', `background-color: ${color};`);
-                console.log('colorMode')
-            } else if ((e.buttons == 1 || e.buttons == 3) && (rainbowMode == true)) {
-                randomColor();
-                gridSquares[i].setAttribute('style', `background-color: ${currentRandomColor};`);
-            }
-        })
-    }
-    for(let i = 0; i < gridSquares.length; i++) {
-        gridSquares[i].addEventListener('mousedown', function(e) {
-            if (colorMode == true) {
-                gridSquares[i].setAttribute('style', `background-color: ${color};`);
-            } else if (rainbowMode == true) {
-                randomColor();
-                gridSquares[i].setAttribute('style', `background-color: ${currentRandomColor};`);
-
-            }
-        })
-    }
 }
 function changeGridSize() {
     gridSize = prompt(`Enter a square number between 1 and 100.
@@ -98,30 +56,81 @@ function changeGridSize() {
         alert('That was not a square number between 1 and 100. Please try again.');
     }
 }
-
-// 4. Add five buttons.
-// Select Color
+// THis feels like an absolute mess. I'm sure there's a better way to do this.
+function colorSquares() {
+    const gridSquares = document.querySelectorAll('.grid');
+    for(let i = 0; i < gridSquares.length; i++) {
+        gridSquares[i].addEventListener('mouseover', function(e) {
+            if ((e.buttons == 1 || e.buttons == 3) && (colorMode == true && ghostMode == false)) {
+                gridSquares[i].setAttribute('style', `opacity: 1; background-color: ${color};`);
+                console.log('colorMode')
+            } else if ((e.buttons == 1 || e.buttons == 3) && (rainbowMode == true)) {
+                randomColor();
+                gridSquares[i].setAttribute('style', `background-color: ${currentRandomColor};`);
+            } else if ((e.buttons == 1 || e.buttons == 3) && (ghostMode == true && colorMode == true)) {
+                const currentOpacity = gridSquares[i].style.opacity;
+                if (currentOpacity == 1) {
+                    gridSquares[i].setAttribute('style', `background-color: ${color}; opacity: 0.1;`);
+                } else {
+                    let newOpacity = parseFloat(currentOpacity) + 0.1;
+                    gridSquares[i].setAttribute('style', `background-color: ${color}; opacity: ${newOpacity};`);
+                }
+            }
+        })
+    }
+    for(let i = 0; i < gridSquares.length; i++) {
+        gridSquares[i].addEventListener('mousedown', function(e) {
+            if (colorMode == true && ghostMode == false) {
+                gridSquares[i].setAttribute('style', `opacity: 1; background-color: ${color};`);
+            } else if (rainbowMode == true) {
+                randomColor();
+                gridSquares[i].setAttribute('style', `background-color: ${currentRandomColor};`);
+            } else if (colorMode == true && ghostMode == true) {
+                const currentOpacity = gridSquares[i].style.opacity;
+                if (currentOpacity == 1) {
+                    gridSquares[i].setAttribute('style', `background-color: ${color}; opacity: 0.1;`);
+                } else {
+                    let newOpacity = parseFloat(currentOpacity) + 0.1;
+                    gridSquares[i].setAttribute('style', `background-color: ${color}; opacity: ${newOpacity};`);
+                }
+            }
+        })
+    }
+}
+// Color Functions
+function randomColor() {
+    currentRandomColor ='#'+ Math.floor(Math.random()*16777215).toString(16);
+}
 function watchColorPicker(event) {
     color = `${event.target.value}`;
 }
-//   b) button tw will select color mode
+// Button Functions
 function setModeColor() {
     if (colorMode == false) {
         colorMode = true;
         rainbowMode = false;
+        ghostMode = false;
     }
 }
-//   c) button three will select ghost mode
-//     i) ghost mode will progressively increase opacity of grids by 10%
-//   d) button four will select rainbow mode
-//     i) rainbow mode will change color of divs randomly
+function setGhostMode () {
+    if (ghostMode == false) {
+        ghostMode = true;
+        rainbowMode = false;
+        colorMode = true;
+    }
+}
 function setRainbowMode() {
     if (rainbowMode == false) {
         rainbowMode = true;
         colorMode = false;
+        ghostMode = false;
     }
 }
-//   e) button five will clear our workspace.
+function clearWorkspace() {
+    for(let i = 0; i < currentGrids.length; i++) {
+        currentGrids[i].setAttribute('style', `background-color: white; opacity: 1;`);
+    }
+}
 function startUp() {
     addGrids();
     colorSquares();

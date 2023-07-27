@@ -1,5 +1,6 @@
 ::root {
     --basis:
+    --opaque: 0:
 }
 
 .gridContainer {
@@ -19,3 +20,4 @@
     flex-grow: 1;
     flex-basis: var(--basis)
 }
+
