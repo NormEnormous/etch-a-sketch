@@ -66,7 +66,7 @@ function colorSquares() {
                 console.log('colorMode')
             } else if ((e.buttons == 1 || e.buttons == 3) && (rainbowMode == true)) {
                 randomColor();
-                gridSquares[i].setAttribute('style', `background-color: ${currentRandomColor};`);
+                gridSquares[i].setAttribute('style', `opacity: 1; background-color: ${currentRandomColor};`);
             } else if ((e.buttons == 1 || e.buttons == 3) && (ghostMode == true && colorMode == true)) {
                 const currentOpacity = gridSquares[i].style.opacity;
                 if (currentOpacity == 1) {
@@ -84,7 +84,7 @@ function colorSquares() {
                 gridSquares[i].setAttribute('style', `opacity: 1; background-color: ${color};`);
             } else if (rainbowMode == true) {
                 randomColor();
-                gridSquares[i].setAttribute('style', `background-color: ${currentRandomColor};`);
+                gridSquares[i].setAttribute('style', `opacity: 1; background-color: ${currentRandomColor};`);
             } else if (colorMode == true && ghostMode == true) {
                 const currentOpacity = gridSquares[i].style.opacity;
                 if (currentOpacity == 1) {
