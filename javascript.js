@@ -2,12 +2,14 @@
 //   a) create the divs using javascript
 //   b) add the divs to container div
 //   c) make the divs appear square, and in a grid with flexbox
-
 let gridSize = 36;
-let basis = 100 / Math.sqrt(gridSize);
+var r = document.querySelector(':root');
 
 const grid = document.querySelector('.gridContainer');
 const currentGrids = document.getElementsByClassName('grid');
+const gridButton = document.querySelector('#gridButton');
+
+gridButton.addEventListener('click', () => changeGridSize());
 
 function removeGrids() {
     for (let i = currentGrids.length; i > 0; i--) {
@@ -17,11 +19,14 @@ function removeGrids() {
     }
 }
 function addGrids() {
+    let basis = (Math.floor(100 / Math.sqrt(gridSize)) - 1);
     for (let i = 0; i < gridSize; i++) {
         const div = document.createElement('div');
         div.classList.add('grid');
+        r.style.setProperty('--basis', `${basis}%`);
         grid.appendChild(div);
         console.log(currentGrids.length);
+        console.log(basis);
     }
 }
 function changeGrids() {
@@ -30,9 +35,6 @@ function changeGrids() {
     colorSquares();
 }
 
-
-
-addGrids();
 // 2. Click and hover events. performance issues.
 function colorSquares() {
 const gridSquares = document.querySelectorAll('.grid');
@@ -49,23 +51,16 @@ for(let i = 0; i < gridSquares.length; i++) {
     })
 }
 }
-colorSquares();
-// 3. Add a button to select grid size
-//   a) button should prompt for size of grid
-//   b) limit size of grid to 100x100
-//   c) grid should fill the same total space, regardless of grid size
-const gridButton = document.querySelector('#gridButton');
-gridButton.addEventListener('click', () => changeGridSize());
-
 function changeGridSize() {
-    gridSize = prompt('Enter a square number between 1 and 100');
-    if (gridSize === 16 || gridSize == 25 || gridSize == 36 || gridSize == 49 || gridSize == 64 || gridSize == 81 || gridSize == 100) {
+    gridSize = prompt(`Enter a square number between 1 and 100.
+(16 - 25 - 36 - 49 - 64 - 81 - 100)`);
+    if (gridSize == 16 || gridSize == 25 || gridSize == 36 || gridSize == 49 || gridSize == 64 || gridSize == 81 || gridSize == 100) {
         changeGrids();
+        return;
     } else if (gridSize === null || gridSize === '') {
         return;
     } else {
         alert('That was not a square number between 1 and 100. Please try again.');
-        changeGrids();
     }
 }
 
@@ -80,3 +75,5 @@ function changeGridSize() {
 //     i) rainbow mode will change color of divs randomly
 //   e) button five will clear our workspace.
 
+addGrids();
+colorSquares();
