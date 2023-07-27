@@ -1,3 +1,7 @@
+::root {
+    --basis:
+}
+
 .gridContainer {
     display: flex;
     flex-wrap: wrap;
@@ -6,9 +10,6 @@
     width: 400px;
     height: 400px;
 }
-.grid.colored {
-    background-color: black
-}
 .grid {
     border: 1px solid black;
     margin-left: -1px;
@@ -16,5 +17,5 @@
     aspect-ratio: 1 /1;
     flex-shrink: 0;
     flex-grow: 1;
-    flex-basis: 16%;
+    flex-basis: var(--basis)
 }

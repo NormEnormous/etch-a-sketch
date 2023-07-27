@@ -10,10 +10,12 @@
 <body ondragstart="return false;" ondrop=="return false;">
     <container class="gridContainer" draggable="false"></container>
     <container class="buttonContainer">
-        <input type="color">Color</bu>
-        <button>Mode: Color</button>
-        <button>Mode: Rainbow</button>
-        <button>Clear Workspace</button>
+        <input type="color" id="colorPicker" name="colorPicker">
+            <label for="colorPicker">Select color</label>
+        <button id="colorButton">Mode: Color</button>
+        <button id="ghostButton">Mode: Ghost</button>
+        <button id="rainbowButton">Mode: Rainbow</button>
+        <button id="clearButton">Clear Workspace</button>
         <button id="gridButton">Change Grid Size</button>
     </container>
 </body>

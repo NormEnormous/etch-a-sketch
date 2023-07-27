@@ -1,21 +1,34 @@
 // 1. Create 16x16 grid of square divs
-//   a) create the divs using javascript
-//   b) add the divs to container div
-//   c) make the divs appear square, and in a grid with flexbox
 let gridSize = 36;
+let color = '#000000';
+let ghostMode = false;
+let rainbowMode = false;
+let colorMode = true;
 var r = document.querySelector(':root');
+
+function randomColor() {
+    currentRandomColor ='#'+ Math.floor(Math.random()*16777215).toString(16);
+}
 
 const grid = document.querySelector('.gridContainer');
 const currentGrids = document.getElementsByClassName('grid');
 const gridButton = document.querySelector('#gridButton');
+const colorPicker = document.querySelector('#colorPicker');
+const colorButton = document.querySelector('#colorButton');
+const ghostButton = document.querySelector('#ghostButton');
+const rainbowButton = document.querySelector('#rainbowButton');
 
 gridButton.addEventListener('click', () => changeGridSize());
+colorPicker.addEventListener("input", watchColorPicker, false);
+colorPicker.addEventListener("change", watchColorPicker, false);
+colorButton.addEventListener('click', () => setModeColor());
+rainbowButton.addEventListener('click', () => setRainbowMode());
+
 
 function removeGrids() {
     for (let i = currentGrids.length; i > 0; i--) {
         const div = document.querySelector(".grid")
         grid.removeChild(div);
-        console.log(currentGrids.length);
     }
 }
 function addGrids() {
@@ -25,8 +38,6 @@ function addGrids() {
         div.classList.add('grid');
         r.style.setProperty('--basis', `${basis}%`);
         grid.appendChild(div);
-        console.log(currentGrids.length);
-        console.log(basis);
     }
 }
 function changeGrids() {
@@ -34,22 +45,46 @@ function changeGrids() {
     addGrids();
     colorSquares();
 }
-
-// 2. Click and hover events. performance issues.
+// Click and hover events. performance issues.
+// function colorSquares() {
+//     const gridSquares = document.querySelectorAll('.grid');
+//     for(let i = 0; i < gridSquares.length; i++) {
+//         gridSquares[i].addEventListener('mouseover', function(e) {
+//             if (e.buttons == 1 || e.buttons == 3) {
+//                 gridSquares[i].setAttribute('style', `background-color: ${color};`);
+//             }
+//         })
+//     }
+//     for(let i = 0; i < gridSquares.length; i++) {
+//         gridSquares[i].addEventListener('mousedown', function(e) {
+//             gridSquares[i].setAttribute('style', `background-color: ${color};`);
+//         })
+//     }
+// }
 function colorSquares() {
-const gridSquares = document.querySelectorAll('.grid');
-for(let i = 0; i < gridSquares.length; i++) {
-    gridSquares[i].addEventListener('mouseover', function(e) {
-        if (e.buttons == 1 || e.buttons == 3) {
-            gridSquares[i].classList.toggle('colored');
-        }
-    })
-}
-for(let i = 0; i < gridSquares.length; i++) {
-    gridSquares[i].addEventListener('mousedown', function(e) {
-        gridSquares[i].classList.toggle('colored');
-    })
-}
+    const gridSquares = document.querySelectorAll('.grid');
+    for(let i = 0; i < gridSquares.length; i++) {
+        gridSquares[i].addEventListener('mouseover', function(e) {
+            if ((e.buttons == 1 || e.buttons == 3) && (colorMode == true)) {
+                gridSquares[i].setAttribute('style', `background-color: ${color};`);
+                console.log('colorMode')
+            } else if ((e.buttons == 1 || e.buttons == 3) && (rainbowMode == true)) {
+                randomColor();
+                gridSquares[i].setAttribute('style', `background-color: ${currentRandomColor};`);
+            }
+        })
+    }
+    for(let i = 0; i < gridSquares.length; i++) {
+        gridSquares[i].addEventListener('mousedown', function(e) {
+            if (colorMode == true) {
+                gridSquares[i].setAttribute('style', `background-color: ${color};`);
+            } else if (rainbowMode == true) {
+                randomColor();
+                gridSquares[i].setAttribute('style', `background-color: ${currentRandomColor};`);
+
+            }
+        })
+    }
 }
 function changeGridSize() {
     gridSize = prompt(`Enter a square number between 1 and 100.
@@ -64,16 +99,31 @@ function changeGridSize() {
     }
 }
 
-
-
 // 4. Add five buttons.
-//   a) button one will select color for color mode
+// Select Color
+function watchColorPicker(event) {
+    color = `${event.target.value}`;
+}
 //   b) button tw will select color mode
+function setModeColor() {
+    if (colorMode == false) {
+        colorMode = true;
+        rainbowMode = false;
+    }
+}
 //   c) button three will select ghost mode
 //     i) ghost mode will progressively increase opacity of grids by 10%
 //   d) button four will select rainbow mode
 //     i) rainbow mode will change color of divs randomly
+function setRainbowMode() {
+    if (rainbowMode == false) {
+        rainbowMode = true;
+        colorMode = false;
+    }
+}
 //   e) button five will clear our workspace.
-
-addGrids();
-colorSquares();
+function startUp() {
+    addGrids();
+    colorSquares();
+}
+startUp();
